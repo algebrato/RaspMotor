@@ -8,7 +8,6 @@ import numpy as np
 
 class Motor:
     def __init__(self,o_1,o_2,o_3,o_4):
-        print "Classe creata"
         
         self.o_1 = o_1
         self.o_2 = o_2
@@ -24,7 +23,6 @@ class Motor:
         gpio.setup(self.o_3, gpio.OUT) 
         gpio.setup(self.o_4, gpio.OUT)
         
-        print("Start Calibration...")
         
         try:       
             self.step_f(11,0.1)
@@ -33,28 +31,26 @@ class Motor:
             #Da implementare
             print("Motor not connected")
 
-        print("Init complete")
 
 
     def step_f(self, N_step, speed):
-        print("Moving ...")
         for i in range(0, N_step):
             if self.i_posf == 1:
-                status = np.array([1,0,0,0]) 
+                status = np.array([gpio.HIGH,gpio.LOW,gpio.LOW,gpio.LOW]) 
             elif self.i_posf == 2:
-                status = np.array([1,1,0,0]) 
+                status = np.array([gpio.HIGH,gpio.HIGH,gpio.LOW,gpio.LOW]) 
             elif self.i_posf == 3:
-                status = np.array([0,1,0,0]) 
+                status = np.array([gpio.LOW,gpio.HIGH,gpio.LOW,gpio.LOW]) 
             elif self.i_posf == 4:
-                status = np.array([0,1,1,0]) 
+                status = np.array([gpio.LOW,gpio.HIGH,gpio.HIGH,gpio.LOW]) 
             elif self.i_posf == 5:
-                status = np.array([0,0,1,0]) 
+                status = np.array([gpio.LOW,gpio.LOW,gpio.HIGH,gpio.LOW]) 
             elif self.i_posf == 6:
-                status = np.array([0,0,1,1]) 
+                status = np.array([gpio.LOW,gpio.LOW,gpio.HIGH,gpio.HIGH]) 
             elif self.i_posf == 7:
-                status = np.array([0,0,0,1]) 
+                status = np.array([gpio.LOW,gpio.LOW,gpio.LOW,gpio.HIGH])
             elif self.i_posf == 8:
-                status = np.array([1,0,0,1]) 
+                status = np.array([gpio.HIGH,gpio.LOW,gpio.LOW,gpio.HIGH]) 
             
             #print(status[0],status[1],status[2],status[3])
             #print(self.i_posf,self.i_posb)
@@ -76,11 +72,9 @@ class Motor:
             if(self.i_posb > 8):
                 self.i_posb = 1
 
-        print("End Moving")
 
 
     def step_b(self,N_step,speed):
-        print("Moving ...")
         for i in range(0, N_step):
             if self.i_posb == 1:
                 status = np.array([1,0,0,1])  
@@ -120,50 +114,10 @@ class Motor:
             if(self.i_posf > 8):
                 self.i_posf = 1
 
-        print("End Moving")
 
 
 
     def exit_tot(self):
         gpio.cleanup()
-        print("Pin cleanup")
-
-
-
-
-if __name__ == "__main__":
-
-    a = Motor(16,12,13,11)
-    
-
-    #for i in range(0,9):
-    #    a.step_f(100,0.001)
-    #    time.sleep(2)
-
-
-    while(1):
-        try:
-            step = input()
-            if step == 0:
-                break
-            else:
-                if step > 0:
-                    a.step_f(step,0.001)
-                else:
-                    a.step_b(np.abs(step),0.001)
-        except SyntaxError:
-            print "Invalid input. Retry..."
-        except NameError:
-            print "Invalid input. Retry..."
-    
-    time.sleep(1)
-
-    a.exit_tot()
-
-
-
-
-
-
 
 
